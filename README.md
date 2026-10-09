@@ -1,6 +1,6 @@
 # tarô por lucas
 
-Site de página única, em português, com identidade editorial baseada nas cartas fornecidas por Lucas. Nome e preços são provisórios.
+Site de página única, em português, com identidade editorial baseada nas cartas fornecidas por Lucas. HTML, CSS e JavaScript nativos, sem dependências ou etapa de build.
 
 ## Executar
 
@@ -18,7 +18,27 @@ Abra http://localhost:8000. Também funciona abrindo `index.html` diretamente, e
 - `styles.css`: identidade visual e responsividade.
 - `config.js`: número público do WhatsApp e preços.
 - `script.js`: seleção da leitura, diálogo de contato e mensagem para WhatsApp.
-- `assets/`: cartas originais fornecidas pelo usuário e favicon.
+- `assets/`: imagens editoriais otimizadas em WebP, cartas originais, textura de papel e favicon.
+
+## Composição editorial
+
+- Hero: `a-estrela-bg.webp`, `estrela-principal.webp` e `estrela-secundaria.webp` formam uma única composição em arco. `folhas.webp` apoia a transição lateral.
+- Bloco conceitual: `a-forca-bg.webp`, com imagem aberta à margem e texto em duas alturas.
+- Leituras: fundo azul profundo, colunas abertas e destaque vermelho para a leitura aprofundada. `lua.webp` aparece como ornamento lateral, sem interferir no conteúdo.
+- Novas perspectivas: `julgamento-bg.webp` acompanha o texto existente sobre olhar de novo.
+- Exemplo de entrega: `sacerdotisa-editorial.webp`, `roda-da-fortuna.webp` e `o-mundo.webp`, com legendas individuais e sem moldura externa.
+- Sobre: composição botânica com `folhas.webp` e apresentação original de Lucas.
+- Contato: `bg-lago.webp`, com camada de contraste para manter os textos legíveis.
+
+As imagens fornecidas foram redimensionadas e comprimidas em WebP, preservando sua composição e transparência. A estrela amarela recebe recorte por CSS para ocultar o céu do arquivo e integrar a camada ao conjunto. Nenhuma imagem foi regenerada. O verso de carta é opcional e não foi incluído para evitar ornamentação excessiva.
+
+O parallax desloca apenas as estrelas decorativas, no máximo 19,8 pixels. Usa eventos passivos, `requestAnimationFrame` e `IntersectionObserver`; suspende atualizações fora da área visível e respeita `prefers-reduced-motion`, inclusive se a preferência mudar com a página aberta. Textos, CTAs e a imagem base permanecem estáveis. Sem suporte ao observer, a composição permanece estática.
+
+## Validação da reconstrução
+
+Verificação em Chromium, em 11 larguras: 320, 360, 390, 600, 768, 800, 801, 1024, 1280, 1440 e 1920 pixels. Conteúdo editorial e nove FAQs comparados com a versão anterior; preços, destinos internos, imagens, ausência de overflow e dimensões do diálogo verificados.
+
+Também foram conferidos os três tipos de leitura, mensagem e número de destino do WhatsApp sem envio, CTA geral, fechamento por Escape, retorno de foco, navegação no diálogo, preços personalizados, contato sem número, cópia manual/automática, parallax e movimento reduzido. Nenhum erro de JavaScript ou resposta HTTP de falha na rodada de QA. Safari e Firefox não foram executados nesta rodada.
 
 Preencha `whatsapp` em `config.js` com código do país, DDD e número, apenas dígitos. Sem número configurado, o site explica que a agenda está em preparação e permite copiar uma mensagem; nunca simula envio. Com número válido, abre o WhatsApp com texto revisável pelo visitante. O site não envia mensagens automaticamente.
 

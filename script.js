@@ -29,4 +29,42 @@
     try { await navigator.clipboard.writeText(message); send.textContent = 'pergunta copiada'; }
     catch { question.value = message; question.focus(); question.select(); document.querySelector('#dialog-note').textContent = 'selecione e copie o texto acima para guardar sua pergunta.'; }
   });
+
+  // Animate only decorative stars while the scene is visible. No continuous loop.
+  const scene = document.querySelector('[data-parallax-scene]');
+  const layers = scene ? [...scene.querySelectorAll('[data-depth]')] : [];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let visible = false;
+  let frame = 0;
+  function renderLayers() {
+    frame = 0;
+    if (!visible || reducedMotion.matches) return;
+    const progress = Math.min(360, Math.max(0, -scene.getBoundingClientRect().top));
+    layers.forEach(layer => {
+      layer.style.setProperty('--parallax-y', `${(progress * Number(layer.dataset.depth)).toFixed(2)}px`);
+    });
+  }
+  function requestFrame() {
+    if (!frame && visible && !reducedMotion.matches) frame = requestAnimationFrame(renderLayers);
+  }
+  function syncMotion() {
+    window.removeEventListener('scroll', requestFrame);
+    window.removeEventListener('resize', requestFrame);
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    if (reducedMotion.matches) layers.forEach(layer => layer.style.removeProperty('--parallax-y'));
+    if (visible && !reducedMotion.matches) {
+      window.addEventListener('scroll', requestFrame, { passive: true });
+      window.addEventListener('resize', requestFrame, { passive: true });
+      requestFrame();
+    }
+  }
+  if (scene && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+      syncMotion();
+    });
+    observer.observe(scene);
+    reducedMotion.addEventListener('change', syncMotion);
+  }
 })();
